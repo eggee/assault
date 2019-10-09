@@ -8,6 +8,7 @@ twine = "*"
 
 [packages]
 setuptools = "*"
+click = "*"
 
 [requires]
 python_version = "3.7"
