@@ -1,6 +1,8 @@
 # assault
 
 A simple CLI load testing tool.
+This if from the LinuxAcademy online CBT course:
+ Programming Use Cases with Python - argparse or click
 
 ## Installation
 
