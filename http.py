@@ -3,33 +3,42 @@ import asyncio
 import time
 
 def fetch(url):
+    """ Make a request to a url/webpage and return the connections results (ie. 200-OK)"""
     pass
 
-# A function to take unmade requests from a queue, perform the work, and add result to the queue
-def worker(name, queue, results)
+def worker(name, queue, results):
+    """ # A function to take unmade requests from a queue, perform the work, and then add result to the queue """
     pass
 
-# Divide up work into batches and collect final results
 async def distribute_work(url, requests, concurrency, results):
+    """ Distribute Work will divide up work into batches and collect final results """
+
+    # instantiate a 'queue' using asycnio queue Class to hold all the jobs you want to run
+    # which are the 'requests per url'
     queue = asyncio.Queue()
 
-    # Add an item to the queue for each request we want to make
-    for _ in range(requests):
+    # Add items into the queue. One item each for the # of requests given from the CLi input
+    # Best thought of as a to-do list that the workers will pull from
+    for _ in range(requests):   # the '_' is used when you don't really care, or use, the value.
         queue.put_nowait(url)
 
-    # Create workers to match the concurrency
+    # Create the 'task list' for however many concurrent jobs given
     tasks = []
     for i in range(concurrency):
         task = asyncio.create_task(worker(f"worker-{i+1}", queue, results))
         tasks.append(task)
 
-    started_at = time.monotonic()
-    await queue.join()
-    total_time = time.monotonic() - started_at
+    # Run the queue
+    # start a timer execute the queue and calculate how much time each worker took.
+    started_at = time.monotonic() # monotonic - think of it like a stop-watch, independant of AM/PM or timezones
+    await queue.join()    # execute everything inside the queue.
+    total_time = time.monotonic() - started_at # calculate time after finishing everything in the queue
 
+    # now that the queue is finish, cancel each task from the tasks list
     for task in tasks:
         task.cancel()
 
+    # output human readable information
     print("---")
     print(
         f"{concurrency} workers took {total_time:.2f} seconds to complete {len(results)} requests"
